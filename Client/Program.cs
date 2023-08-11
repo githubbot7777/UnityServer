@@ -26,8 +26,12 @@ namespace Client
                     Console.WriteLine($"Connected To {socket.RemoteEndPoint.ToString()}");//RemoteEndPoint 연결된 원격 IP 주소 및 포트 번호를 Socket 포함하는 값을 가져옵니다
 
                     //보낸다
-                    byte[] sendBuff = Encoding.UTF8.GetBytes("Hello world!");
-                    int sendBytes = socket.Send(sendBuff);
+                    for(int i=0;i<5;i++)
+                    {
+                        byte[] sendBuff = Encoding.UTF8.GetBytes($"Hello world! {i}");
+                        int sendBytes = socket.Send(sendBuff);
+                    }
+                 
 
                     //받는다
                     byte[] recvBuff = new byte[1024];

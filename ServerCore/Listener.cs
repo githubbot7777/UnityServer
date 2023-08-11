@@ -46,10 +46,6 @@ namespace ServerCore
           
             RegisterAccept(args);//다음번 클라이언트를 위해서 다시 등록
         }
-        public Socket Accept()
-        {
-            
-            return _listenSocket.Accept();
-        }
+       
     }
 }
