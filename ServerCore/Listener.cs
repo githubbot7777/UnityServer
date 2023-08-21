@@ -6,15 +6,15 @@ using System.Net.Sockets;
 
 namespace ServerCore
 {
-    class Listener
+    public class Listener
     {
         Socket _listenSocket;
-        Action<Socket> _onAcceptHandler;
+        Func<Session> _sessionFactory;
 
-        public void Init(IPEndPoint endPoint,Action<Socket> onAcceptHandler)
+        public void Init(IPEndPoint endPoint, Func<Session> sessionFactory)
         {
             _listenSocket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            _onAcceptHandler += onAcceptHandler;
+            _sessionFactory += sessionFactory;
 
             _listenSocket.Bind(endPoint);//Socket을 로컬 엔드포인트와 연결합니다.
             _listenSocket.Listen(10); //backlog: 최대 대기수
@@ -38,7 +38,10 @@ namespace ServerCore
         {
             if(args.SocketError==SocketError.Success)
             {
-                _onAcceptHandler.Invoke(args.AcceptSocket);//클라와 연결됐을경우 할 작업 콜백방식으로 처리
+                Session session = _sessionFactory.Invoke();
+                session.Start(args.AcceptSocket);
+                session.OnConnected(args.AcceptSocket.RemoteEndPoint);
+               
             }
             else
                 Console.WriteLine(args.SocketError.ToString());

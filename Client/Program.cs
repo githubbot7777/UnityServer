@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServerCore;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -6,6 +7,37 @@ using System.Threading;
 
 namespace Client
 {
+    class GameSession : Session
+    {
+        public override void OnConnected(EndPoint endPoint)
+        {
+            Console.WriteLine($"OnConnected: {endPoint}");
+
+            //보낸다
+            for (int i = 0; i < 5; i++)
+            {
+                byte[] sendBuff = Encoding.UTF8.GetBytes($"Hello world! {i}");
+                Send(sendBuff);
+            }
+
+        }
+
+        public override void OnDisconnected(EndPoint endPoint)
+        {
+            Console.WriteLine($"OnDisconnected: {endPoint}");
+        }
+
+        public override void OnRecv(ArraySegment<byte> buffer)
+        {
+            string recvData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
+            Console.WriteLine($"[From Server]{recvData}");
+        }
+
+        public override void OnSend(int numOfBytes)
+        {
+            Console.WriteLine($"Transferred bytes: {numOfBytes}");
+        }
+    }
     class Program
     {
         static void Main(string[] args)
@@ -16,32 +48,15 @@ namespace Client
             IPAddress ipAddr = ipHost.AddressList[0];//호스트와 연결된 IP 주소 목록을 가져오거나 설정합니다.
             IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);//네트워크 엔드포인트를 IP 주소와 포트 번호로 나타냅니다.
 
+            Connector connector = new Connector();
+            connector.Connect(endPoint, () => { return new GameSession(); });
             while(true)
             {
-                Socket socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                
 
                 try
                 {
-                    socket.Connect(endPoint);
-                    Console.WriteLine($"Connected To {socket.RemoteEndPoint.ToString()}");//RemoteEndPoint 연결된 원격 IP 주소 및 포트 번호를 Socket 포함하는 값을 가져옵니다
-
-                    //보낸다
-                    for(int i=0;i<5;i++)
-                    {
-                        byte[] sendBuff = Encoding.UTF8.GetBytes($"Hello world! {i}");
-                        int sendBytes = socket.Send(sendBuff);
-                    }
-                 
-
-                    //받는다
-                    byte[] recvBuff = new byte[1024];
-                    int recvBytes = socket.Receive(recvBuff);
-                    string recvData = Encoding.UTF8.GetString(recvBuff, 0, recvBytes);
-                    Console.WriteLine($"[From Server]{recvData}");
-
-                    //나간다
-                    socket.Shutdown(SocketShutdown.Both);
-                    socket.Close();
+                   
                 }
                 catch (Exception e)
                 {
