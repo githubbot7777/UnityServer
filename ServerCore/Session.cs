@@ -14,7 +14,7 @@ namespace ServerCore
         RecvBuffer _recvBuffer = new RecvBuffer(1024);
         object _lock = new object();
         //매번 RegisterSend 하는게 아닌 큐에다가 보낼 것을 저장 해놓음
-        Queue<byte[]> _sendQueue = new Queue<byte[]>();
+        Queue<ArraySegment<byte>> _sendQueue = new Queue<ArraySegment<byte>>();
        
         List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
         SocketAsyncEventArgs _sendArgs = new SocketAsyncEventArgs();
@@ -35,7 +35,7 @@ namespace ServerCore
             RegisterRecv();
         }
         
-        public void Send(byte[] sendBuff)
+        public void Send(ArraySegment<byte> sendBuff)
         {
             lock(_lock)
             {
@@ -63,8 +63,8 @@ namespace ServerCore
           
             while (_sendQueue.Count>0)
             {
-                byte[] buff = _sendQueue.Dequeue();
-                _pendingList.Add(new ArraySegment<byte>(buff, 0, buff.Length));
+                ArraySegment<byte> buff = _sendQueue.Dequeue();
+                _pendingList.Add(buff);
             }
                //Dequeue 한번에 sendAsync 한번에서 개선
                //리스트에 큐에 저장된 데이터 모은후 한번에 보낸다.
