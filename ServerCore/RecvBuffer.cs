@@ -14,8 +14,8 @@ namespace ServerCore
         { 
             _buffer = new ArraySegment<byte>(new byte[bufferSize], 0, bufferSize);
 
-
-
+           
+           
 
 
 
@@ -49,6 +49,7 @@ namespace ServerCore
             else
             {
                 Array.Copy(_buffer.Array, _buffer.Offset + _readPos, _buffer.Array, _buffer.Offset, dataSize);
+               
                 _readPos = 0;
                 _writePos = dataSize;
             }
