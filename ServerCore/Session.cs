@@ -47,9 +47,9 @@ namespace ServerCore
         int _disconnected = 0;//socket.Disconnect() 두번 연속으로 하는 것을 방지하기 위해
         RecvBuffer _recvBuffer = new RecvBuffer(1024);
         object _lock = new object();
-        //매번 RegisterSend 하는게 아닌 큐에다가 보낼 것을 저장 해놓음
-        Queue<ArraySegment<byte>> _sendQueue = new Queue<ArraySegment<byte>>();
-       
+        
+        Queue<ArraySegment<byte>> _sendQueue = new Queue<ArraySegment<byte>>();//매번 RegisterSend 하는게 아닌 큐에다가 보낼 것을 저장 해놓음
+
         List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
         SocketAsyncEventArgs _sendArgs = new SocketAsyncEventArgs();
         SocketAsyncEventArgs _recvArgs = new SocketAsyncEventArgs();
