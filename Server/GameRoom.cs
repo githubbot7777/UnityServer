@@ -24,7 +24,7 @@ namespace Server
             packet.chat = $"{chat} I am {packet.playerId}";
             ArraySegment<byte> segment = packet.Write();
 
-           
+           // N^2 개선 필요
                 foreach (ClientSession s in _sessions)
                     s.Send(segment);
            
