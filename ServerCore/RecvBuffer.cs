@@ -14,12 +14,6 @@ namespace ServerCore
         { 
             _buffer = new ArraySegment<byte>(new byte[bufferSize], 0, bufferSize);
 
-           
-           
-
-
-
-
         }
 
         //아직 처리 되지 않은 데이터 크기
