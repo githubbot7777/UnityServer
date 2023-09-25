@@ -88,7 +88,7 @@ namespace PacketGenerator
 			int depth = r.Depth + 1;
 			while (r.Read())
 			{
-				if (r.Depth != depth)
+				if (r.Depth != depth)//<packet></packet>안에 있는 멤버변수 처리 끝나면 종료
 					break;
 
 				string memberName = r["name"];

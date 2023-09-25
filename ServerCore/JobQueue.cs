@@ -43,7 +43,7 @@ namespace ServerCore
 
         Action Pop()
         {
-            lock(_lock)
+            lock(_lock)//꺼내는 와중에 누가 jobQueue에 밀어넣을 수 있기 때문에 lock 설정
             {
                 if(_jobQueue.Count==0)
                 {

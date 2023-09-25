@@ -7,7 +7,7 @@ namespace ServerCore
 {
     public class SendBufferHelper
     {
-        //Thread끼리 경합을 없애기위해 ThreadLocal 사용
+        //Thread끼리 경합을 없애기위해 ThreadLocal 사용, ()=>{return null;} 맨처음 만들때 초기화 작업
         public static ThreadLocal<SendBuffer> CurrentBuffer = new ThreadLocal<SendBuffer>(() => { return null; });
 
         public static int ChunkSize { get; set; } = 65535*100;
